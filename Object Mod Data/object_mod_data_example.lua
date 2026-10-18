@@ -65,11 +65,11 @@ local function findObject(args)
     if not sq then return nil end
     local objs = sq:getObjects()
 
-    -- is the index in bounds?
+    -- does the index make sense?
     if args.index < 0 or args.index >= objs:size() then return nil end
     local obj = objs:get(args.index)
     
-    -- does the obj we found match what we want?
+    -- check the sprite name to be absolutely sure
     local sprite = obj:getSprite() and obj:getSprite():getName()
     if sprite ~= args.sprite then return nil end
     return obj

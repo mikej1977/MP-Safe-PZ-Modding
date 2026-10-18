@@ -8,9 +8,9 @@ Notes:
     - Player objects use the same functions but they sync differently. We aren't covering that here.
 
   Mod data is a table of key/value pairs
-    - Keys can only be strings or numbers.
-    - Values can be strings, numbers, bools and plain tables of those.
-    - You can't save objects (like InventoryItem), userdata, functions, etc.
+    - Keys should only be strings or numbers.
+    - Values should be strings, numbers, bools and plain tables of those.
+    - You can't save objects like InventoryItem, metatables, userdata, functions, etc.
     - Every mod data transfer replaces the entire table.
 
 IsoObject:transmitModData()

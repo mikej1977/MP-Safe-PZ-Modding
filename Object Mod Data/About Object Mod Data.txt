@@ -1,0 +1,39 @@
+isoObject Mod Data (this is not Global Mod Data)
+
+Notes:
+    - Any client can overwrite any object's mod data. Have clients ask via sendClientCommand and let the server call transmitModData.
+    - Nearby clients are clients roughly 64-88 squares(beep boop) around the object. Clients further away will get the update when the chunk loads.
+    - Every mod uses the same mod data table. Name space your mod data keys so you don't overwrite someone elses data.
+    - To remove only your mod data, set your key to nil, ie modData.MyMod = nil, and then transmitModData.
+    - Player objects use the same functions but they sync differently. We aren't covering that here.
+
+  Mod data is a table of key/value pairs
+    - Keys can only be strings or numbers.
+    - Values can be strings, numbers, bools and plain tables of those.
+    - You can't save objects (like InventoryItem), userdata, functions, etc.
+    - Every mod data transfer replaces the entire table.
+
+IsoObject:transmitModData()
+    - This call sends the entire mod data table. If the table is empty, it will wipe the receiver's mod data.
+    - If the object's square is nil, the call does nothing.
+    - There is no event for when mod data changes, with the exception of OnWaterAmountChange when the water amount changed.
+    Behavior:
+      - Called on MP Client: Server applies the mod data and sends it to all nearby clients except the sender.
+      - Called on Server: Mod data is sent to all nearby clients.
+      - Called on SP: Nothing is sent. The object is just marked for saving.
+
+The functions below work the same no matter where they are called. In MP, the server and every client has their own copy of the object's mod data.
+Changes will stay local until the server syncs them with transmitModData. Only the server's copy will be saved.
+
+IsoObject:getModData()
+    - Returns the object's mod data table, or creates an empty mod data table if it doesn't exist.
+    - This edits the table directly.
+    - Changes are local until synced (call transmitModData on the server).
+
+IsoObject:hasModData()
+    - true only if the object has mod data and it isn't empty.
+    - Doesn't create a table. Use it when you're only reading, ie obj:hasModData() and obj:getModData().MyMod
+
+IsoObject:setModData(table)
+    - Replaces the whole table with a new one. Nothing is synced.
+    - You'll probably never need it since changing getModData() directly does the same thing.
